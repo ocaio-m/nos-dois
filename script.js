@@ -1,46 +1,50 @@
 console.log("Site iniciado!");
 
 
+// =========================
+// ELEMENTOS
+// =========================
+
 const bubbleSound =
     document.getElementById("bubble-sound");
-
 
 const bumbleCircle =
     document.getElementById("bumble-circle");
 
-
 const bumbleContainer =
     document.getElementById("bumble-container");
-
 
 const personYou =
     document.getElementById("person-you");
 
-
 const personHer =
     document.getElementById("person-her");
-
 
 const svg =
     document.getElementById("connection-lines");
 
-
 const lineYou =
     document.getElementById("line-you");
-
 
 const lineHer =
     document.getElementById("line-her");
 
-
 const lineBottom =
     document.getElementById("line-bottom");
 
+const chatIcon =
+    document.getElementById("chat-icon");
+
+const chatX =
+    document.getElementById("chat-x");
+
+const banIcon =
+    document.getElementById("ban-icon");
 
 
-/* =========================
-   SOM
-========================= */
+// =========================
+// SOM
+// =========================
 
 function playBubble() {
 
@@ -51,24 +55,20 @@ function playBubble() {
 }
 
 
-
-/* =========================
-   LINHAS LATERAIS
-========================= */
+// =========================
+// LINHAS LATERAIS
+// =========================
 
 function prepareLine(line, startElement, endElement) {
 
     const startRect =
         startElement.getBoundingClientRect();
 
-
     const endRect =
         endElement.getBoundingClientRect();
 
-
     const svgRect =
         svg.getBoundingClientRect();
-
 
 
     // Centro do elemento inicial
@@ -86,7 +86,6 @@ function prepareLine(line, startElement, endElement) {
     };
 
 
-
     // Centro do elemento final
 
     const endCenter = {
@@ -102,13 +101,11 @@ function prepareLine(line, startElement, endElement) {
     };
 
 
-
     // Direção
 
     const dx =
         endCenter.x -
         startCenter.x;
-
 
     const dy =
         endCenter.y -
@@ -125,10 +122,8 @@ function prepareLine(line, startElement, endElement) {
     const dirX =
         dx / distance;
 
-
     const dirY =
         dy / distance;
-
 
 
     // Raios dos círculos
@@ -139,13 +134,11 @@ function prepareLine(line, startElement, endElement) {
             startRect.height
         ) / 2;
 
-
     const endRadius =
         Math.min(
             endRect.width,
             endRect.height
         ) / 2;
-
 
 
     // Começa na borda
@@ -154,11 +147,9 @@ function prepareLine(line, startElement, endElement) {
         startCenter.x +
         dirX * startRadius;
 
-
     const startY =
         startCenter.y +
         dirY * startRadius;
-
 
 
     // Termina na borda
@@ -167,63 +158,50 @@ function prepareLine(line, startElement, endElement) {
         endCenter.x -
         dirX * endRadius;
 
-
     const endY =
         endCenter.y -
         dirY * endRadius;
-
 
 
     // Converte para SVG
 
     const x1 =
         ((startX - svgRect.left) /
-        svgRect.width) * 100;
-
+            svgRect.width) * 100;
 
     const y1 =
         ((startY - svgRect.top) /
-        svgRect.height) * 100;
-
+            svgRect.height) * 100;
 
     const x2 =
         ((endX - svgRect.left) /
-        svgRect.width) * 100;
-
+            svgRect.width) * 100;
 
     const y2 =
         ((endY - svgRect.top) /
-        svgRect.height) * 100;
-
+            svgRect.height) * 100;
 
 
     line.setAttribute("x1", x1);
-
     line.setAttribute("y1", y1);
-
     line.setAttribute("x2", x2);
-
     line.setAttribute("y2", y2);
 
 
-
-    // Comprimento real
+    // Comprimento
 
     const length =
         line.getTotalLength();
 
 
-
     line.style.strokeDasharray =
         length;
-
 
     line.style.strokeDashoffset =
         length;
 
-
-    line.style.opacity = "1";
-
+    line.style.opacity =
+        "1";
 
 
     // Força atualização
@@ -231,30 +209,100 @@ function prepareLine(line, startElement, endElement) {
     line.getBoundingClientRect();
 
 
-
     // Anima
 
     line.style.transition =
         "stroke-dashoffset 0.8s cubic-bezier(0.22, 1, 0.36, 1)";
 
-
-    line.style.strokeDashoffset = "0";
+    line.style.strokeDashoffset =
+        "0";
 
 }
 
 
+// =========================
+// POSICIONAR ÍCONES
+// =========================
 
-/* =========================
-   CLIQUE NO BUMBLE
-========================= */
+function positionIcons() {
+
+    /*
+        CHAT
+        Coloca o ícone exatamente
+        no centro da linha inferior.
+    */
+
+    const lineRect =
+        lineBottom.getBoundingClientRect();
+
+
+    const chatXPosition =
+        lineRect.left +
+        lineRect.width / 2;
+
+
+    const chatYPosition =
+        lineRect.top +
+        lineRect.height / 2;
+
+
+    chatIcon.style.left =
+        `${chatXPosition}px`;
+
+    chatIcon.style.top =
+        `${chatYPosition}px`;
+
+
+    /*
+        X
+        Fica exatamente sobre o chat.
+    */
+
+    chatX.style.left =
+        `${chatXPosition}px`;
+
+    chatX.style.top =
+        `${chatYPosition}px`;
+
+
+    /*
+        BANIMENTO
+        Fica no centro da sua foto.
+    */
+
+    const youRect =
+        personYou.getBoundingClientRect();
+
+
+    const banXPosition =
+        youRect.left +
+        youRect.width / 2;
+
+
+    const banYPosition =
+        youRect.top +
+        youRect.height / 2;
+
+
+    banIcon.style.left =
+        `${banXPosition}px`;
+
+    banIcon.style.top =
+        `${banYPosition}px`;
+
+}
+
+
+// =========================
+// CLIQUE NO BUMBLE
+// =========================
 
 bumbleCircle.addEventListener("click", () => {
 
 
-    // SOM
+    // SOM DO BUMBLE
 
     playBubble();
-
 
 
     // BUMBLE SOBE
@@ -263,8 +311,9 @@ bumbleCircle.addEventListener("click", () => {
         "translateY(-80px)";
 
 
-
-    // VOCÊ
+    // =========================
+    // SUA FOTO
+    // =========================
 
     setTimeout(() => {
 
@@ -277,8 +326,9 @@ bumbleCircle.addEventListener("click", () => {
     }, 600);
 
 
-
-    // ELA
+    // =========================
+    // FOTO DELA
+    // =========================
 
     setTimeout(() => {
 
@@ -291,8 +341,9 @@ bumbleCircle.addEventListener("click", () => {
     }, 1200);
 
 
-
+    // =========================
     // LINHA → VOCÊ
+    // =========================
 
     setTimeout(() => {
 
@@ -305,8 +356,9 @@ bumbleCircle.addEventListener("click", () => {
     }, 1900);
 
 
-
+    // =========================
     // LINHA → ELA
+    // =========================
 
     setTimeout(() => {
 
@@ -320,28 +372,24 @@ bumbleCircle.addEventListener("click", () => {
 
 
 
-    // LINHA INFERIOR
-
     setTimeout(() => {
 
         const youRect =
             personYou.getBoundingClientRect();
 
-
         const herRect =
             personHer.getBoundingClientRect();
-
 
         const svgRect =
             svg.getBoundingClientRect();
 
 
 
-        // Da borda esquerda da sua foto
-        // até a borda direita da foto dela
 
         const startX =
             youRect.left;
+
+
 
 
         const endX =
@@ -349,7 +397,6 @@ bumbleCircle.addEventListener("click", () => {
 
 
 
-        // Centro vertical
 
         const y =
             youRect.top +
@@ -357,22 +404,18 @@ bumbleCircle.addEventListener("click", () => {
 
 
 
-        // Coordenadas SVG
 
         const x1 =
             ((startX - svgRect.left) /
-            svgRect.width) * 100;
-
+                svgRect.width) * 100;
 
         const x2 =
             ((endX - svgRect.left) /
-            svgRect.width) * 100;
-
+                svgRect.width) * 100;
 
         const yPosition =
             ((y - svgRect.top) /
-            svgRect.height) * 100;
-
+                svgRect.height) * 100;
 
 
         lineBottom.setAttribute(
@@ -380,18 +423,15 @@ bumbleCircle.addEventListener("click", () => {
             x1
         );
 
-
         lineBottom.setAttribute(
             "y1",
             yPosition
         );
 
-
         lineBottom.setAttribute(
             "x2",
             x2
         );
-
 
         lineBottom.setAttribute(
             "y2",
@@ -399,37 +439,103 @@ bumbleCircle.addEventListener("click", () => {
         );
 
 
+        // Comprimento
 
         const length =
             lineBottom.getTotalLength();
 
 
-
         lineBottom.style.strokeDasharray =
             length;
 
-
         lineBottom.style.strokeDashoffset =
             length;
-
 
         lineBottom.style.opacity =
             "1";
 
 
+        // Força atualização
 
         lineBottom.getBoundingClientRect();
 
 
+        // Anima
 
         lineBottom.style.transition =
             "stroke-dashoffset 0.8s cubic-bezier(0.22, 1, 0.36, 1)";
-
 
         lineBottom.style.strokeDashoffset =
             "0";
 
 
     }, 3100);
+
+
+    // =========================
+    // CHAT
+    // =========================
+
+    setTimeout(() => {
+
+        // Primeiro calcula a posição
+        // real da linha no dispositivo
+
+        positionIcons();
+
+
+        // Depois aparece
+
+        chatIcon.classList.add(
+            "chat-show"
+        );
+
+
+    }, 4000);
+
+
+    // =========================
+    // X + BANIMENTO
+    // =========================
+
+    setTimeout(() => {
+
+        // Recalcula a posição
+        // antes de mostrar
+
+        positionIcons();
+
+
+        chatX.classList.add(
+            "x-show"
+        );
+
+
+        banIcon.classList.add(
+            "ban-show"
+        );
+
+
+    }, 4800);
+
+
+});
+
+
+// =========================
+// RESPONSIVIDADE
+// =========================
+
+window.addEventListener("resize", () => {
+
+    if (
+        chatIcon.classList.contains("chat-show") ||
+        chatX.classList.contains("x-show") ||
+        banIcon.classList.contains("ban-show")
+    ) {
+
+        positionIcons();
+
+    }
 
 });
